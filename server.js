@@ -7,16 +7,16 @@ const authRoutes = require("./routes/auth");
 
 const app = express();
 
-// ❌ Remove CORS (not needed when serving frontend from backend)
 app.use(express.json());
 
 // API routes
 app.use("/api/auth", authRoutes);
 
-// Serve frontend
+// Serve React frontend
 app.use(express.static(path.join(__dirname, "dist")));
 
-app.get("*", (req, res) => {
+// Catch-all route for frontend (Express 5)
+app.get(/^\/.*$/, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
