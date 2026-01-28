@@ -6,10 +6,8 @@ const path = require("path");
 const authRoutes = require("./routes/auth");
 
 const app = express();
-const __dirname = path.resolve();
 
 // ❌ Remove CORS (not needed when serving frontend from backend)
-
 app.use(express.json());
 
 // API routes
