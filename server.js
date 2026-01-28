@@ -1,27 +1,26 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 require("dotenv").config();
+const path = require("path");
 
 const authRoutes = require("./routes/auth");
 
 const app = express();
+const __dirname = path.resolve();
 
-// ✅ CORS for local frontend only
-app.use(cors({
-  origin: "http://localhost:5173", // your React dev server
-  credentials: true,               // allow cookies / auth headers
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// ❌ Remove CORS (not needed when serving frontend from backend)
 
 app.use(express.json());
 
-// Routes
+// API routes
 app.use("/api/auth", authRoutes);
 
-// Health check
-app.get("/", (req, res) => res.send("Backend is running"));
+// Serve frontend
+app.use(express.static(path.join(__dirname, "dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 // DB connect
 mongoose.connect(process.env.MONGO_URI)
